@@ -136,8 +136,19 @@ class PandaSimNode(Node):
     # @timer
     def simulation_step(self):
         # self._publish_hand_camera_image()
-        self.panda.step()
-        p.stepSimulation()
+        use_model = True
+        if use_model:
+            # 先获取模型输入
+            policy_client = RobotInferenceClient(host="localhost", port=5555)
+
+            print("Available modality config available:")
+            modality_configs = policy_client.get_modality_config()
+            print(modality_configs.keys())
+            self.panda.step(use_model)
+            p.stepSimulation()
+        else:
+            self.panda.step()
+            p.stepSimulation()
 
     def timer(func):
         def wrapper(self, *args, **kwargs):

@@ -207,10 +207,14 @@ class PandaSim(object):
         self.gripped_apple["is_in_target"] = True
         self.gripped_apple = None
 
-    def step(self):
+    def step(self,use_model = False,joint_pos = None):
         """主控制循环（添加状态机逻辑）"""
         self.t += self.control_dt
-
+        if use_model:
+            self.apply_joint_positions(joint_pos)
+        else:
+            self.not_use_model_func()
+    def not_use_model_func(self):
         remaining = [a for a in self.apples if not a["is_in_target"]]
         if not remaining:
             print("All apples moved!")
