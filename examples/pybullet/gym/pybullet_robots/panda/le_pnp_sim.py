@@ -219,7 +219,8 @@ class PandaSimNode(Node):
         msg = JointState()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.name, msg.position, msg.velocity = self.panda.get_current_joint_states()
-        self.joint_angle = msg.position
+        self.joints_angle = msg.position
+        self.joint_name = msg.name
         if not self.pub_all:
             self.joint_state_pub.publish(msg)
     # 使用装饰器
@@ -235,7 +236,8 @@ class PandaSimNode(Node):
 
             msg.top_image = self.top_ros_image
             msg.right_image = self.hand_ros_image
-            msg.joints_angle = self.joint_angle
+            msg.joints_angle = self.joints_angle
+            msg.joint_name = self.joint_name
 
             self.le_robot_data_pub.publish(msg)
         except Exception as e:
